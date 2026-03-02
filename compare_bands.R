@@ -1,6 +1,18 @@
 library(ggplot2)
 
-# Compare rating of two bands' albums over time on a line chart
+# -----------------------------------------------------------------------------
+# Behavior: Makes a line chart comparing two artists. First artist = red line,
+#           second = blue. X-axis is year, Y-axis is rating. Needs ggplot2.
+# Examples: band_album_comparison_chart("Radiohead", "Arcade Fire")
+#           band_album_comparison_chart("Taylor Swift", "Lana Del Rey")
+# Exceptions: Empty chart if artist not found
+# Returns:  A chart (shows in Plots pane)
+# Parameters:
+#   var.artist1: It is a character (text). It is the first artist, shown as the
+#                red line. It is case-sensitive and must match album_data$Artist.
+#   var.artist2: It is a character (text). It is the second artist, shown as the
+#                blue line. It is case-sensitive and must match album_data$Artist.
+# -----------------------------------------------------------------------------
 band_album_comparison_chart <- function(var.artist1, var.artist2){
   band1_albums <- select(filter(album_data[order(album_data$Year),], Artist==var.artist1), Artist, Album, Year, Rating)
   band2_albums <- select(filter(album_data[order(album_data$Year),], Artist==var.artist2), Artist, Album, Year, Rating)

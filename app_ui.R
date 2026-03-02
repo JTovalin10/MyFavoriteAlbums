@@ -1,39 +1,55 @@
-# This file builds the Shiny UI. It has seven tabs, including the Home tab.
-# The file partners with app_server.R for inputs and outputs.
-# The app.R file is the main file.
+# -----------------------------------------------------------------------------
+# Behavior: Loads the album data and builds the app layout. Seven tabs with
+#           dropdowns, buttons, and places to show results.
+# Examples: Loaded when you run app.R
+# Exceptions: Stops if the CSV file is missing or wrong format
+# Returns:  The ui (what you see) and album_data, all_bands, all_years
+# Parameters: none
+# -----------------------------------------------------------------------------
 library(shiny)
 
-# Grab the music data.
-# See documentation for how to format the data
+# Load the album data from the CSV file
 album_data <- read.csv("data/album-rankings.csv")
 
-# List all of the bands in alphabetical order
-# Used to populate the pull-down menu
+# List of all artists for the dropdown menus
 all_bands <- sort(unique(album_data$Artist))
 
-# List all of the years
-# Used to populate the pull-down menu
+# List of all years for the year dropdown
 all_years <- sort(unique(album_data$Year))
 
+# -----------------------------------------------------------------------------
+# Behavior: The page layout. Each tab has its own inputs (dropdowns, sliders,
+#           checkboxes) and outputs (tables, text, charts).
+# Examples: Shiny uses this to draw the app
+# Exceptions: Dropdowns need all_bands and all_years to have data
+# Returns:  The page layout
+# Parameters: none
+# -----------------------------------------------------------------------------
 ui <- fluidPage(
-    mainPanel(htmlOutput("title"),
+    mainPanel(
+      # Title at top of page
+      htmlOutput("title"),
       tabsetPanel(
         id = "tabset",
+        # Tab 1: Welcome, album count, artist count, most albums artist
         tabPanel("Home",
                  htmlOutput("texthome1"),
                  textOutput("total_albums"),
                  textOutput("total_bands"),
                  textOutput("popular_artist")),
+        # Tab 2: Pick year range, see #1 album for each year
         tabPanel("Number One Albums",
                  htmlOutput("text3"),
                  sliderInput("rng", "Choose the Years", value = c(1993, 1998), min = 1993, max = 2024, sep = ""),
                  tableOutput("number_one_table")),
+        # Tab 3: Pick a year, click Submit, see that year's rankings
         tabPanel("Top Albums by Year",
                  htmlOutput("text4"),
                  selectInput("year", "Choose a year:", all_years),
                  actionButton("action_button2", label = "Submit"),
                  htmlOutput("text5"),
                  tableOutput("year_table")),
+        # Tab 4: Pick an artist, click Submit, see their albums and stats
         tabPanel("Artists' Albums",
                  htmlOutput("text"),
                  selectInput("band_name", "Choose a band or artist:", all_bands),
@@ -42,6 +58,7 @@ ui <- fluidPage(
                  tableOutput("album_table"),
                  textOutput("album_count"),
                  textOutput("avg_rating")),
+        # Tab 5: Pick min albums, exclude EPs/live or not, see top 15 artists
         tabPanel("Favorite Artists",
                  htmlOutput("text10"),
                  selectInput("min_albums", "Minimum number of albums:",
@@ -49,12 +66,14 @@ ui <- fluidPage(
                  checkboxInput("live_ep_checkbox", "Exclude EPs and Live Albums", TRUE),
                  actionButton("action_button4", label = "Submit"),
                  tableOutput("fav_artists_table")),
+        # Tab 6: Pick two artists, see comparison chart
         tabPanel("Artist Comparison",
                  htmlOutput("text8"),
                  selectInput("band_name_1", "First band or artist:", all_bands),
                  selectInput("band_name_2", "Second band or artist:", all_bands),
                  htmlOutput("text9"),
                  plotOutput("compare_bands")),
+        # Tab 7: Pick rating cutoff, see albums to buy on vinyl
         tabPanel("Vinyl",
                  htmlOutput("text6"),
                  selectInput("vinyl_rating", "Select which albums to display:",

@@ -1,24 +1,33 @@
-# Shiny Web App for Music Data
+# -----------------------------------------------------------------------------
+# Behavior: Starts the app. Loads the libraries, then loads the UI, server,
+#           and all the helper functions. Launches the app.
+# Examples: Run this file in RStudio to start the app
+# Exceptions: Stops if the data file or any R file is missing
+# Returns:  Opens the app in your browser
+# Parameters: none
+# -----------------------------------------------------------------------------
 
-# Load libraries so they are available
 library(shiny)
 library(dplyr)
 
-# Use source() to execute the `app_ui.R` and `app_server.R` files. These will
-# define the UI value and server function respectively.
-# List additional source files for functions
+# Load the page layout and data
 source("app_ui.R")
+# Load what happens when user clicks things
 source("app_server.R")
+# Home tab: album count, artist count, most albums
 source("home.R")
+# Artist tab: albums by band, avg rating, album count
 source("albums_by_band.R")
+# Number one album per year
 source("number_one_albums.R")
+# Albums for one year
 source("albums_by_year.R")
+# Vinyl wishlist
 source("vinyl.R")
+# Artist comparison chart
 source("compare_bands.R")
+# Top 15 artists
 source("fav_bands.R")
 
-# You will need to fill in the `app_ui.R` file to create the layout.
-# Run the app through this file.
-
-# Create a new `shinyApp()` using the loaded `ui` and `server` variables
+# Start the app
 shinyApp(ui = ui, server = server)
